@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>毕业寄语 · 班级同学录</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body class="bg-gray-50">
+    <nav class="bg-white shadow-md py-4 px-6 flex flex-wrap justify-between items-center">
+        <a href="/" class="text-2xl font-bold text-indigo-600"><i class="fas fa-graduation-cap mr-2"></i>青春纪念册</a>
+        <div class="space-x-4 md:space-x-6 text-gray-700">
+            <a href="/" class="hover:text-indigo-600">首页</a>
+            <a href="/students.html" class="hover:text-indigo-600">同学录</a>
+            <a href="/messages.html" class="hover:text-indigo-600">留言板</a>
+            <a href="/photos.html" class="hover:text-indigo-600">相册</a>
+            <a href="/blessings.html" class="hover:text-indigo-600 font-medium">毕业寄语</a>
+        </div>
+    </nav>
+
+    <main class="container mx-auto px-4 py-8 max-w-3xl">
+        <h1 class="text-3xl font-bold mb-6 text-gray-800"><i class="fas fa-heart text-indigo-500 mr-3"></i>毕业寄语墙</h1>
+        
+        <!-- 寄语表单 -->
+        <div class="bg-white rounded-xl shadow p-6 mb-8">
+            <h2 class="text-xl font-semibold mb-4">留下你的毕业祝福</h2>
+            <form id="blessingForm">
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2">你的名字</label>
+                    <input type="text" id="author" required class="w-full border border-gray-300 rounded-lg px-4 py-2">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2">寄语内容</label>
+                    <textarea id="blessingContent" rows="3" required class="w-full border border-gray-300 rounded-lg px-4 py-2"></textarea>
+                </div>
+                <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-6 py-2 rounded-lg">
+                    <i class="fas fa-heart mr-2"></i>送出祝福
+                </button>
+            </form>
+        </div>
+
+        <!-- 寄语列表 -->
+        <div id="blessingsList" class="space-y-4">
+            <p class="text-gray-500">加载中...</p>
+        </div>
+    </main>
+
+    <script src="js/api.js"></script>
+    <script src="js/blessings.js"></script>
+</body>
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>青春纪念册 · 班级同学录</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body class="bg-gray-50 font-sans">
+    <!-- 导航栏 -->
+    <nav class="bg-white shadow-md py-4 px-6 flex flex-wrap justify-between items-center">
+        <a href="/" class="text-2xl font-bold text-indigo-600"><i class="fas fa-graduation-cap mr-2"></i>青春纪念册</a>
+        <div class="space-x-4 md:space-x-6 text-gray-700">
+            <a href="/" class="hover:text-indigo-600 font-medium">首页</a>
+            <a href="/students.html" class="hover:text-indigo-600">同学录</a>
+            <a href="/messages.html" class="hover:text-indigo-600">留言板</a>
+            <a href="/photos.html" class="hover:text-indigo-600">相册</a>
+            <a href="/blessings.html" class="hover:text-indigo-600">毕业寄语</a>
+        </div>
+    </nav>
+
+    <!-- 欢迎横幅 -->
+    <header class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white py-16 px-6 text-center">
+        <h1 class="text-4xl md:text-5xl font-bold mb-4">我们毕业啦 🎓</h1>
+        <p class="text-xl md:text-2xl opacity-90">高三（1）班 · 永远的记忆</p>
+    </header>
+
+    <!-- 班级数据卡片 -->
+    <main class="container mx-auto px-4 py-12">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+            <div class="bg-white rounded-xl shadow p-6 text-center">
+                <i class="fas fa-users text-4xl text-indigo-500 mb-2"></i>
+                <div class="text-3xl font-bold text-gray-800" id="studentCount">--</div>
+                <div class="text-gray-500">班级成员</div>
+            </div>
+            <div class="bg-white rounded-xl shadow p-6 text-center">
+                <i class="fas fa-comment-dots text-4xl text-indigo-500 mb-2"></i>
+                <div class="text-3xl font-bold text-gray-800" id="messageCount">--</div>
+                <div class="text-gray-500">留言数量</div>
+            </div>
+            <div class="bg-white rounded-xl shadow p-6 text-center">
+                <i class="fas fa-images text-4xl text-indigo-500 mb-2"></i>
+                <div class="text-3xl font-bold text-gray-800" id="photoCount">--</div>
+                <div class="text-gray-500">相册照片</div>
+            </div>
+            <div class="bg-white rounded-xl shadow p-6 text-center">
+                <i class="fas fa-heart text-4xl text-indigo-500 mb-2"></i>
+                <div class="text-3xl font-bold text-gray-800" id="blessingCount">--</div>
+                <div class="text-gray-500">毕业寄语</div>
+            </div>
+        </div>
+
+        <!-- 最新动态区域 -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- 最新留言 -->
+            <div class="bg-white rounded-xl shadow p-6">
+                <h2 class="text-2xl font-semibold mb-4 flex items-center"><i class="fas fa-comment text-indigo-500 mr-2"></i>最新留言</h2>
+                <div id="recentMessages" class="space-y-3">
+                    <p class="text-gray-400">加载中...</p>
+                </div>
+            </div>
+            <!-- 最新照片 -->
+            <div class="bg-white rounded-xl shadow p-6">
+                <h2 class="text-2xl font-semibold mb-4 flex items-center"><i class="fas fa-camera text-indigo-500 mr-2"></i>最新照片</h2>
+                <div id="recentPhotos" class="grid grid-cols-3 gap-2">
+                    <p class="text-gray-400 col-span-3">加载中...</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/api.js"></script>
+    <script>
+        (async function loadHomeStats() {
+            try {
+                // 并行获取统计数据
+                const [students, messages, photos, blessings] = await Promise.all([
+                    fetchAPI('/classmates'),
+                    fetchAPI('/messages'),
+                    fetchAPI('/photos'),
+                    fetchAPI('/blessings')
+                ]);
+                document.getElementById('studentCount').textContent = students.length;
+                document.getElementById('messageCount').textContent = messages.length;
+                document.getElementById('photoCount').textContent = photos.length;
+                document.getElementById('blessingCount').textContent = blessings.length;
+
+                // 渲染最新3条留言
+                const msgContainer = document.getElementById('recentMessages');
+                if (messages.length > 0) {
+                    msgContainer.innerHTML = messages.slice(0, 3).map(m => `
+                        <div class="border-l-4 border-indigo-300 pl-3">
+                            <p class="text-gray-800">${m.content}</p>
+                            <p class="text-sm text-gray-500 mt-1">—— ${m.nickname}</p>
+                        </div>
+                    `).join('');
+                } else {
+                    msgContainer.innerHTML = '<p class="text-gray-400">暂无留言</p>';
+                }
+
+                // 渲染最新3张照片
+                const photoContainer = document.getElementById('recentPhotos');
+                if (photos.length > 0) {
+                    photoContainer.innerHTML = photos.slice(0, 3).map(p => `
+                        <img src="${p.image_url}" alt="${p.title}" class="w-full h-24 object-cover rounded-lg">
+                    `).join('');
+                } else {
+                    photoContainer.innerHTML = '<p class="text-gray-400 col-span-3">暂无照片</p>';
+                }
+            } catch (err) {
+                console.error('首页数据加载失败', err);
+            }
+        })();
+    </script>
+</body>
+</html>
